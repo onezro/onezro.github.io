@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>todos</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script src="./js/velocity.min.js"></script>
+    <link rel="stylesheet" href="./css/index.css">
+</head>
+
+<body>
+    <div id="app">
+        <div class="box">
+            <header class="header">
+                <div class="header-img">
+                    <img src="./images/todosHeader.svg" alt="todosHeader">
+                </div>
+                <div class="header-todos">To-Do List</div>
+            </header>
+            <div class="input-text">
+                <h2>~ Today I need to ~</h2>
+                <div class="form">
+                    <div class="form-input">
+                        <input type="text" v-model="str" placeholder="Add new todo..." autofocus>
+                    </div>
+                    <button @click="textData" class="submit-btn"><span>Submit</span></button>
+                </div>
+            </div>
+
+
+            <transition-group class="todos" tag="ul" @before-enter="beforeEnter" @enter="enter"
+                @after-enter="afterEnter" @before-leave="beforeLeave" @leave="leave" @after-leave="afterEnter">
+                <li v-for="({id,text,completed}) in strArr" :key="id" :class="{active:completed==true}"
+                    v-show="showTodos(show)!==completed">
+
+                    <input type="checkbox" v-model="completed" @click="chooseText(id,$event)">
+                    <p class="todos-text">{{text}}</p>
+                    <button class="delet-todos" @click="removeEl(id)"><span>X</span></button>
+
+                </li>
+            </transition-group>
+
+            <div class="footer">
+                <span v-show="strArr.length>0">{{strArr.length}} item left</span>
+                <div class="footer-btn">
+                    <span v-show="strArr.length>0" @click="show=''"
+                        :class="{btnActive:show==''||strArr.length==1}">All</span>
+                    <span @click="show=1" :class="{btnActive:show==1}" v-show="showbtn&&strArr.length>1">Active</span>
+                    <span @click="show=2" :class="{btnActive:show==2}"
+                        v-show="showbtn&&strArr.length>1">Completed</span>
+                </div>
+
+                <span class="option" @click="clearCompleted" v-show="showbtn&&strArr.length>0">Clear completed</span>
+
+            </div>
+        </div>
+    </div>
+    <script>
+
+        let vm = new Vue({
+            el: '#app',
+            data: {
+                str: '',
+                show: '',
+                showbtn: '',
+                showStyle: true,
+                todosLength:'',
+                strArr: JSON.parse(localStorage.getItem('todos')) ?? [],
+            },
+            methods: {
+                //添加数据遍历渲染
+                textData() {
+                    if (this.str.trim()) {
+                        this.strArr.unshift({
+                            id: Date.now(),
+                            text: this.str,
+                            completed: false
+                        })
+                        this.addData(...this.strArr)
+                    }
+
+                    this.str = ''
+                },
+                //删除
+                removeEl(a) {
+                    this.strArr = this.strArr.filter(({ id }) => id !== a)
+                    this.btnHidde()
+                    // this.removeData(1, a)
+                    let todosDataStr = JSON.stringify(this.strArr)
+                    localStorage.setItem('todos', todosDataStr)
+                },
+                //勾选
+                chooseText(idChoose, event) {
+                    this.showStyle = !this.showStyle
+                    this.strArr = this.strArr.map((item) => {
+                        let { id, completed } = item
+                        if (id == idChoose) {
+                            return ({
+                                ...item,
+                                completed: event.target.checked
+                            })
+                        } else {
+                            return item
+                        }
+                    });
+                    this.btnHidde()
+                    // this.changeData(idChoose)
+                    let todosDataStr = JSON.stringify( this.strArr)
+                    localStorage.setItem('todos', todosDataStr)
+                },
+                //清除完成的
+                clearCompleted() {
+                    this.show=''
+                    this.strArr = this.strArr.filter(({ completed }) => completed !== true)
+                    this.btnHidde()
+                    // this.removeData(2)
+                    let todosDataStr = JSON.stringify(this.strArr)
+                    localStorage.setItem('todos', todosDataStr)
+                },
+                //展示对应的Todos
+                showTodos(g = '') {
+                    if (g == '') {
+                        return ''
+                    } else if (g == 1) {
+                        return true
+                    } else {
+                        return false
+                    }
+                },
+                btnHidde() {
+                    let p = this.strArr.find(({ completed }) => {
+                        return completed == true
+                    })
+                    this.showbtn = p
+                    console.log(p);
+                },
+                //添加数据储存
+                addData({ id, text, completed }) {
+                    // console.log(id);
+                    let todosData = JSON.parse(localStorage.getItem('todos')) ?? []
+                    todosData = [ { id, text, completed },...todosData]
+                    let todosDataStr = JSON.stringify(todosData)
+                    localStorage.setItem('todos', todosDataStr)
+                },
+                beforeEnter(el) {
+                    Velocity.hook(el, "translateX", "100px")
+                    Velocity.hook(el, "opacity", "0")
+                },
+                enter(el, done) {
+
+                    Velocity(el, {
+                        opacity: [1, 'linear'],
+                        translateX: [0, 'linear']
+                    }, {
+                        duration: 500,
+                        complete: done
+                    })
+                },
+                afterEnter(el) {
+                    console.log('动画结束');
+                },
+                beforeLeave(el) {
+                    console.log('删除动画开始');
+                    el.style.transform='0px'
+                    el.style.opacity=1
+                },
+                leave(el, done) {
+                    // el.offsetHeight
+                    console.log(el.className);
+                    Velocity(el, {
+                        opacity: [0,'linear'],
+                        // backgroundColor:['transparent','linear'],
+                        translateX: [-100,'linear']
+                    }, {
+                        duration: 500,
+                        complete: done
+                    })
+
+                    //
+                   
+                }
+
+            }
+        })
+        vm.btnHidde()
+    </script>
+</body>
+
+</html>

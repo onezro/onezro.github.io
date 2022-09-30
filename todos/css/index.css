@@ -1,0 +1,172 @@
+* {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  box-sizing: border-box; }
+
+body {
+  display: flex;
+  min-height: 100vh;
+  background-image: linear-gradient(90deg, #3a546c, #a0d1ff); }
+
+#app {
+  display: flex;
+  margin: auto;
+  padding: 30px 40px;
+  align-items: center;
+  width: 480px;
+  border-radius: 20px;
+  background-color: #fff;
+  box-shadow: 5px 5px 5px #3a546c; }
+  #app .box {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    justify-content: space-between; }
+    #app .box .header {
+      display: flex;
+      align-items: center;
+      justify-content: center; }
+      #app .box .header .header-img {
+        width: 80px;
+        margin-right: 10px; }
+      #app .box .header .header-todos {
+        padding: .25em .8em .15em;
+        border-radius: 20% 5% 20% 5%/5% 20% 25% 20%;
+        transform: rotateZ(5deg);
+        font-size: 18px;
+        color: #fff;
+        background: #3a546c; }
+    #app .box .input-text {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 20px; }
+      #app .box .input-text h2 {
+        margin-bottom: 18px;
+        font-size: 22px; }
+      #app .box .input-text .form {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%; }
+        #app .box .input-text .form .form-input {
+          display: inline-block;
+          flex-grow: .65;
+          margin-right: 15px; }
+          #app .box .input-text .form .form-input input {
+            outline: none;
+            border: none;
+            background-color: transparent;
+            width: 100%;
+            padding: 5px 0 3px;
+            border-bottom: 3px dashed #3a546c;
+            font-size: 16px; }
+        #app .box .input-text .form .submit-btn {
+          outline: none;
+          border: none;
+          background-color: transparent;
+          cursor: pointer;
+          position: relative;
+          transform: rotate(5deg);
+          border-radius: 6px;
+          transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+          #app .box .input-text .form .submit-btn:active {
+            transform: rotate(0deg); }
+            #app .box .input-text .form .submit-btn:active::before {
+              display: none; }
+          #app .box .input-text .form .submit-btn::before {
+            box-sizing: border-box;
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            transform: scaleY(1.1);
+            border: 1px solid #494a4b;
+            border-radius: inherit;
+            transform-origin: top;
+            background-image: url(../images/6.png);
+            background-color: #3a546c;
+            transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            content: ''; }
+          #app .box .input-text .form .submit-btn span {
+            position: relative;
+            display: block;
+            font-size: 16.5px;
+            padding: .34em .84em;
+            border: 2px solid #494a4b;
+            border-radius: inherit;
+            background-color: #fff; }
+    #app .box .todos {
+      margin-top: 40px;
+      perspective: 350px; }
+      #app .box .todos li {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+        padding: 8px 10px 8px 0;
+        border-radius: 5px; }
+        #app .box .todos li input {
+          cursor: pointer;
+          margin: 0 10px; }
+        #app .box .todos li .todos-text {
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          padding-right: 7px; }
+        #app .box .todos li .delet-todos {
+          outline: none;
+          border: none;
+          background-color: transparent;
+          margin: 0 -8px 0 auto;
+          padding: 0 8px;
+          cursor: pointer; }
+    #app .box .footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 50px;
+      gap: 10px;
+      font-size: 13px; }
+      #app .box .footer .footer-btn {
+        display: flex;
+        align-items: center;
+        gap: 6px; }
+        #app .box .footer .footer-btn span {
+          padding: 0 .6em;
+          border-radius: 4px;
+          transition: all .5s ease-out;
+          cursor: pointer; }
+          #app .box .footer .footer-btn span:hover {
+            color: #fff;
+            background-color: #3a546c; }
+      #app .box .footer .option {
+        padding: 0 .6em;
+        border-radius: 4px;
+        transition: all .5s ease-out;
+        cursor: pointer; }
+        #app .box .footer .option:hover {
+          color: #fff;
+          background-color: #3a546c; }
+  #app .btnActive {
+    color: #fff;
+    background-color: #3a546c; }
+  #app .active {
+    color: #fff;
+    text-decoration: line-through;
+    background-color: #3a546c;
+    animation: todosAn 1s ease-in-out both; }
+@keyframes todosAn {
+  0% {
+    transform: rotateX(90deg);
+    opacity: 0; }
+  40% {
+    transform: rotateX(-10deg); }
+  70% {
+    transform: rotateX(10deg); }
+  100% {
+    transform: rotateX(0deg);
+    opacity: 1; } }
+
+/*# sourceMappingURL=index.css.map */
